@@ -111,9 +111,9 @@ class Classes extends Component{
     render(){
         return(
             <div>
-                <Navbar current="Classes"/>
-                <PageHeader header="Classes"/>
-                <SearchBar placeholder="Search for Class"/>
+                <Navbar current="Technologies"/>
+                <PageHeader header="Technologies"/>
+                <SearchBar placeholder="Search for Technologies"/>
                 <div className={stylesCSS.cardContainer}>
                     {this.state.loading?
                     "Loading, please wait ..."
@@ -125,7 +125,7 @@ class Classes extends Component{
                     })}
                 </div>
                 <div className={stylesCSS.addNewContainer}>
-                    <AddNewCard inputId="newClassInput" placeholder="New Class" onClick={this.postNewClass}/>
+                    <AddNewCard inputId="newClassInput" placeholder="New Technology" onClick={this.postNewClass}/>
                 </div>
                 <footer className={stylesCSS.footerContainer}>
                     <Footer/>

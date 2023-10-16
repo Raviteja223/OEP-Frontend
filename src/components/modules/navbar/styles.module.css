@@ -14,14 +14,14 @@
 .navbarLogo img {
     width: 70px;
     height: 70px;
-    transition: ease-in-out 0.5s;
+    /* transition: ease-in-out 0.5s; */
 }
-.navbarLogo img:hover {
+/* .navbarLogo img:hover {
     transition: ease-in-out 0.5s;
     transform: rotate(130deg);
     width: 80px;
     height: 80px;
-}
+} */
 .navbarLinksContainer {
     display: grid;
     place-items: center;

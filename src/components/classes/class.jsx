@@ -228,7 +228,7 @@ class Class extends Component{
     render(){
         return(
             <div>
-                <Navbar current="Classes"/>
+                <Navbar current="Technologies"/>
                 {this.state.loading?
                 <center>Loading..Please Wait.</center>
                 :
