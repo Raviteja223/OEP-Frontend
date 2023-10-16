@@ -9,7 +9,7 @@ export default function Navbar (props){
             href: "/exams"
         },
         {
-            title: "Classes",
+            title: "Technologies",
             href: "/classes"
         },
         {

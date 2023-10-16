@@ -44,7 +44,7 @@ export default function Landing (props){
                         <h1>Control, all yours.</h1>
                     </div>
                     <div className={stylesCSS.featureInfo}>
-                        <p>Create and save classes, question bank and choose when to show the result. <br/>
+                        <p>Create and save technologies, question bank and choose when to show the result. <br/>
                         You also get detailed result of the whole class and on a per student basis</p>
                     </div>
                 </div>
