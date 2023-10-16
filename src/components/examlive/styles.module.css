@@ -68,10 +68,10 @@
 
     border-width: 0px;
     border-radius: 6px;
-    background-color: #ffe600;
+    background-color: #178eff;
 }
 .button:hover {
-    background-color: #ddc700;
+    background-color: #178eff;
 }
 .button:focus {
     outline: none;
@@ -205,7 +205,7 @@
     background-color: #ff8888;
 }
 .yellow {
-    background-color: #ffe600;
+    background-color: #178eff;
 }
 
 /* Question Container */
@@ -306,10 +306,10 @@
 
     border-width: 0px;
     border-radius: 6px;
-    background-color: #ffe600;
+    background-color: #178eff;
 }
 .confirmButton:hover {
-    background-color: #ddc700;
+    background-color: #178eff;
 }
 .confirmButton:focus {
     outline: none;

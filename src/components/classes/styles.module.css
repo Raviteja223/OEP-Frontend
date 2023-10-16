@@ -110,10 +110,10 @@ body {
 
     border-width: 0px;
     border-radius: 6px;
-    background-color: #ffe600;
+    background-color: #178eff;
 }
 .addButton:hover {
-    background-color: #ddc700;
+    background-color: #178eff;
 }
 .addButton:focus {
     outline: none;

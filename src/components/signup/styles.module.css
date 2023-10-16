@@ -67,10 +67,10 @@
 
     border-width: 0px;
     border-radius: 6px;
-    background-color: #ffe600;
+    background-color: #178eff;
 }
 .button:hover {
-    background-color: #ddc700;
+    background-color: #178eff;
 }
 .button:focus {
     outline: none;
