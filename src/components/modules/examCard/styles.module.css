@@ -19,7 +19,7 @@ a {
 
 .cardColorTab {
     width: 30px;
-    background-color: #ffe500;
+    background-color: #178eff;
     border-radius: 10px 5px 5px 10px;
 }
 .cardContent {
@@ -79,7 +79,7 @@ a {
     height: 35px;
 
     padding: 0px 10px;
-    background-color: #ffe500;
+    background-color: #178eff;
     border-radius: 5px;
 }
 
@@ -109,7 +109,7 @@ a {
 }
 .button:hover {
     transform: scale(1.1);
-    background-color: #ffe500;
+    background-color: #178eff;
 }
 .delButton:hover {
     background-color: #ff8888;
