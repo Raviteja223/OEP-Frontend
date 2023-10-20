@@ -42,8 +42,7 @@ class ExamLive extends Component {
         examinerEmail: "teacher@cuchd.in",
       },
     };
-
-    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    
     this.fetchQuestionBank = this.fetchQuestionBank.bind(this);
     this.loginRequestHandler = this.loginRequestHandler.bind(this);
     this.questionChangeHandler = this.questionChangeHandler.bind(this);
