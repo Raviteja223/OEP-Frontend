@@ -43,6 +43,7 @@ class ExamLive extends Component {
       },
     };
 
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
     this.fetchQuestionBank = this.fetchQuestionBank.bind(this);
     this.loginRequestHandler = this.loginRequestHandler.bind(this);
     this.questionChangeHandler = this.questionChangeHandler.bind(this);
@@ -57,31 +58,34 @@ class ExamLive extends Component {
     this.submitResponses = this.submitResponses.bind(this);
   }
 
-  handleVisibilityChange = () => {
+  componentDidMount() {
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+  }
+
+
+  handleVisibilityChange() {
     if (document.hidden) {
-      // The tab is now hidden (switched to another tab).
       if (this.state.tabSwitchCount === 0) {
-        // Display the warning for the first time.
-        alert(
-          "Warning: You've switched tabs. Switching tabs may result in submitting the exam."
-        );
-        // Increment the tab switch count.
+        alert("Warning: You've switched tabs. Switching tabs may result in submitting the exam.");
         this.setState({ tabSwitchCount: 1 });
       } else if (this.state.tabSwitchCount === 1) {
-        // It's the second tab switch, submit the exam.
         this.submitExam();
       }
-    } else {
-      // The tab is now visible again.
-      // Resume actions as needed.
     }
-  };
+  }
 
   submitExam() {
     // Implement your exam submission logic here.
     // You can call your existing `submitResponses` method or perform the submission as required.
     // Example:
-    this.submitResponses();
+    this.setState({ tabSwitchCount: 2 }, () => {
+      alert("Exam submitted due to tab switch.");
+      this.submitResponses();
+    });
   }
 
   // fetching questions for the exam
