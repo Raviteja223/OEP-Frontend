@@ -72,26 +72,18 @@ class ExamLive extends Component {
   
 
 
-  handleVisibilityChange() {
+  async handleVisibilityChange() {
     if (document.hidden) {
       const tabSwitchCount = this.state.tabSwitchCount + 1;
       this.setState({ tabSwitchCount });
       localStorage.setItem("tabSwitchCount", tabSwitchCount);
       alert("Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!");
 
-      if (tabSwitchCount === 2) {
+      if (tabSwitchCount == 2) {
         // It's the second tab switch, submit the exam.
-        this.submitExam();
+        await this.submitResponses();
       }
     }
-  }
-  
-
-  submitExam() {
-    // Implement your exam submission logic here.
-    // You can call your existing `submitResponses` method or perform the submission as required.
-    // Example:
-    this.submitResponses();
   }
 
   // fetching questions for the exam
