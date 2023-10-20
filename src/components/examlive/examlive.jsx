@@ -60,24 +60,33 @@ class ExamLive extends Component {
 
   componentDidMount() {
     // Initialize tab switch count from local storage.
-    const tabSwitchCount = parseInt(localStorage.getItem("tabSwitchCount"), 10) || 0;
+    const tabSwitchCount =
+      parseInt(localStorage.getItem("tabSwitchCount"), 10) || 0;
     this.setState({ tabSwitchCount });
 
     document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
   }
-  
-
 
   async handleVisibilityChange() {
     if (document.hidden) {
+      if (this.state.tabSwitchCount == 0)
+        alert(
+          "Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!"
+        );
+      else
+        alert(
+          "Warning: You have switched tabs. Your exam will be submitted automatically!"
+        );
       const tabSwitchCount = this.state.tabSwitchCount + 1;
       this.setState({ tabSwitchCount });
       localStorage.setItem("tabSwitchCount", tabSwitchCount);
-      alert("Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!");
 
       if (tabSwitchCount >= 2) {
         // It's the second tab switch, submit the exam.
