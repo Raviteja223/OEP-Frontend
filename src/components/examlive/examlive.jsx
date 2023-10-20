@@ -79,7 +79,7 @@ class ExamLive extends Component {
       localStorage.setItem("tabSwitchCount", tabSwitchCount);
       alert("Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!");
 
-      if (tabSwitchCount == 2) {
+      if (tabSwitchCount == 4) {
         // It's the second tab switch, submit the exam.
         await this.submitResponses();
       }
