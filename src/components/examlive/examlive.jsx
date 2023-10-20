@@ -73,7 +73,10 @@ class ExamLive extends Component {
         alert("Warning: You've switched tabs. Switching tabs may result in submitting the exam.");
         this.setState({ tabSwitchCount: 1 });
       } else if (this.state.tabSwitchCount === 1) {
-        this.submitExam();
+        // It's the second tab switch, submit the exam.
+        this.setState({ tabSwitchCount: 2 }, () => {
+          this.submitExam();
+        });
       }
     }
   }
@@ -82,10 +85,7 @@ class ExamLive extends Component {
     // Implement your exam submission logic here.
     // You can call your existing `submitResponses` method or perform the submission as required.
     // Example:
-    this.setState({ tabSwitchCount: 2 }, () => {
-      alert("Exam submitted due to tab switch.");
-      this.submitResponses();
-    });
+    this.submitResponses();
   }
 
   // fetching questions for the exam
