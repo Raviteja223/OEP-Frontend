@@ -13,6 +13,9 @@ class ExamLive extends Component {
     super(props);
 
     this.state = {
+      cameraStream: null,
+      snapshots: [], // to store captured snapshots
+      snapshotInterval: null, // to control the interval
       tabSwitchCount: 0,
       // In login
       examinerId: this.props.match.params.examinerId,
@@ -56,6 +59,52 @@ class ExamLive extends Component {
 
     this.submitResponses = this.submitResponses.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+  }
+
+  async startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      this.setState({ cameraStream: stream });
+
+      // Access the video element in your HTML and set the stream as the source
+      const videoElement = document.getElementById("cameraVideo");
+      videoElement.srcObject = stream;
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+    }
+  }
+
+  takeSnapshot() {
+    const videoElement = document.getElementById("cameraVideo");
+    const canvasElement = document.createElement("canvas");
+    canvasElement.width = videoElement.videoWidth;
+    canvasElement.height = videoElement.videoHeight;
+
+    const context = canvasElement.getContext("2d");
+    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+    const snapshot = canvasElement.toDataURL("image/png");
+
+    this.setState((prevState) => ({
+      snapshots: [...prevState.snapshots, snapshot],
+    }));
+  }
+
+  startSnapshotInterval() {
+    // Set up the interval to take snapshots every 5 minutes (300,000 milliseconds)
+    const interval = setInterval(() => {
+      this.takeSnapshot();
+    }, 300000);
+
+    this.setState({ snapshotInterval: interval });
+  }
+
+  stopSnapshotInterval() {
+    const { snapshotInterval } = this.state;
+    if (snapshotInterval) {
+      clearInterval(snapshotInterval);
+      this.setState({ snapshotInterval: null });
+    }
   }
 
   componentDidMount() {
@@ -195,6 +244,13 @@ class ExamLive extends Component {
     if (candidateId !== "" && candidatePassword !== "") {
       await this.fetchQuestionBank();
     }
+
+    // Start the camera immediately
+    if (this.state.candidateId !== "" && this.state.candidatePassword !== "") {
+        await this.fetchQuestionBank();
+        this.startCamera();
+        this.startSnapshotInterval(); // Start taking snapshots every 5 minutes
+      }
 
     this.startTimer();
   }
@@ -793,6 +849,7 @@ class ExamLive extends Component {
             </div>
           </div>
         )}
+        <video id="cameraVideo" autoPlay playsInline style={{ display: "none" }}></video>
       </div>
     );
   }
