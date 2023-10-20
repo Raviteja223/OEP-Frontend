@@ -11,7 +11,6 @@ import Exams from "./components/exams/exams";
 import Exam from "./components/exams/exam";
 import QuestionBanks from "./components/questionbanks/questionbanks";
 import QuestionBank from "./components/questionbanks/questionbank";
-import TabSwitchRestriction from './TabSwitchRestriction';
 
 import ExamLive from "./components/examlive/examlive";
 
@@ -21,7 +20,6 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <TabSwitchRestriction />
                 <Switch>
                     <Route path="/" exact component={Landing} />
                     <Route path="/login" exact component={Login} />
