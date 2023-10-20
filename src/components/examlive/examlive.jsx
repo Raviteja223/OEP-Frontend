@@ -42,7 +42,7 @@ class ExamLive extends Component {
         examinerEmail: "teacher@cuchd.in",
       },
     };
-    
+
     this.fetchQuestionBank = this.fetchQuestionBank.bind(this);
     this.loginRequestHandler = this.loginRequestHandler.bind(this);
     this.questionChangeHandler = this.questionChangeHandler.bind(this);
@@ -55,30 +55,36 @@ class ExamLive extends Component {
     this.startTimer = this.startTimer.bind(this);
 
     this.submitResponses = this.submitResponses.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.handleTabSwitch);
+    // Initialize tab switch count from local storage.
+    const tabSwitchCount = parseInt(localStorage.getItem("tabSwitchCount"), 10) || 0;
+    this.setState({ tabSwitchCount });
+
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
-  
+
   componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.handleTabSwitch);
+    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
   }
   
 
 
-  handleTabSwitch = (event) => {
-    if (this.state.tabSwitchCount === 0) {
-      event.preventDefault(); // Prompt the user with a confirmation dialog.
-  
-      event.returnValue = "Warning: You've switched tabs. Switching tabs may result in submitting the exam.";
-      
-      this.setState({ tabSwitchCount: 1 });
-    } else if (this.state.tabSwitchCount === 1) {
-      // It's the second tab switch, submit the exam.
-      this.submitExam();
+  handleVisibilityChange() {
+    if (document.hidden) {
+      const tabSwitchCount = this.state.tabSwitchCount + 1;
+      this.setState({ tabSwitchCount });
+      localStorage.setItem("tabSwitchCount", tabSwitchCount);
+      alert("Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!");
+
+      if (tabSwitchCount === 2) {
+        // It's the second tab switch, submit the exam.
+        this.submitExam();
+      }
     }
-  };
+  }
   
 
   submitExam() {
