@@ -59,27 +59,28 @@ class ExamLive extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+    window.addEventListener("beforeunload", this.handleTabSwitch);
   }
-
+  
   componentWillUnmount() {
-    document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+    window.removeEventListener("beforeunload", this.handleTabSwitch);
   }
+  
 
 
-  handleVisibilityChange() {
-    if (document.hidden) {
-      if (this.state.tabSwitchCount === 0) {
-        alert("Warning: You've switched tabs. Switching tabs may result in submitting the exam.");
-        this.setState({ tabSwitchCount: 1 });
-      } else if (this.state.tabSwitchCount === 1) {
-        // It's the second tab switch, submit the exam.
-        this.setState({ tabSwitchCount: 2 }, () => {
-          this.submitExam();
-        });
-      }
+  handleTabSwitch = (event) => {
+    if (this.state.tabSwitchCount === 0) {
+      event.preventDefault(); // Prompt the user with a confirmation dialog.
+  
+      event.returnValue = "Warning: You've switched tabs. Switching tabs may result in submitting the exam.";
+      
+      this.setState({ tabSwitchCount: 1 });
+    } else if (this.state.tabSwitchCount === 1) {
+      // It's the second tab switch, submit the exam.
+      this.submitExam();
     }
-  }
+  };
+  
 
   submitExam() {
     // Implement your exam submission logic here.
