@@ -425,6 +425,7 @@ class ExamLive extends Component {
           };
         });
       }
+      localStorage.clear();
     }
   }
 
@@ -465,6 +466,7 @@ class ExamLive extends Component {
           };
         });
       }
+      localStorage.clear();
     }
   }
 
@@ -517,7 +519,6 @@ class ExamLive extends Component {
 
     return (
       <div>
-        <video id="cameraVideo" autoPlay playsInline style={{ display: "none" }}></video>
         {this.state.resultScreen ? (
           <div className={stylesCSS.resultPage}>
             <div className={stylesCSS.reportContainer}>
@@ -773,78 +774,92 @@ class ExamLive extends Component {
               <div className={stylesCSS.questionContainer}>
                 {this.state.questionBank.questions ? (
                   // JSON.stringify(this.state.questionBank.questions[this.state.currentQuestionIndex])
-                  <div className={stylesCSS.quesitonResponseCardContainer}>
-                    <div className={stylesCSS.quesitonResponseCard}>
-                      <h2 className={stylesCSS.colorGrey}>{`Question ${
-                        this.state.currentQuestionIndex + 1
-                      }`}</h2>
-                      <div className={stylesCSS.quesitonResponseCard_question}>
-                        <h2>
-                          {
-                            this.state.questionBank.questions[
-                              this.state.currentQuestionIndex
-                            ].value
-                          }
-                        </h2>
-                      </div>
-                      <div className={stylesCSS.quesitonResponseCard_options}>
-                        {this.state.questionBank.questions[
-                          this.state.currentQuestionIndex
-                        ].options.map((option, i) => {
-                          return (
-                            <div
-                              key={i}
-                              className={stylesCSS.quesitonResponseCard_option}
-                            >
-                              <i
-                                className={`fas fa-check-square fa-2x ${
-                                  stylesCSS.checkMark
-                                } ${
-                                  this.isCorrectOption(
-                                    this.state.questionBank.questions[
-                                      this.state.currentQuestionIndex
-                                    ]._id,
-                                    option._id
-                                  )
-                                    ? `${stylesCSS.checkMarkChecked}`
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  this.recordResponse(
-                                    this.state.questionBank.questions[
-                                      this.state.currentQuestionIndex
-                                    ]._id,
-                                    option._id
-                                  );
-                                }}
-                              ></i>
-                              <p>{option.value}</p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className={stylesCSS.quesitonResponseCard_buttons}>
-                        <button
-                          className={`${stylesCSS.confirmButton}`}
-                          onClick={this.nextButtonHandler}
+                  <>
+                    //
+                    JSON.stringify(this.state.questionBank.questions[this.state.currentQuestionIndex])
+                    <div className={stylesCSS.quesitonResponseCardContainer}>
+                      <div className={stylesCSS.quesitonResponseCard}>
+                        <h2 className={stylesCSS.colorGrey}>{`Question ${
+                          this.state.currentQuestionIndex + 1
+                        }`}</h2>
+                        <div
+                          className={stylesCSS.quesitonResponseCard_question}
                         >
-                          Next
-                        </button>
-                        <button
-                          className={`${stylesCSS.confirmButton}`}
-                          onClick={() => {
-                            this.markHandler(this.state.currentQuestionIndex);
-                          }}
-                        >
-                          {this.state.markedIndexes.indexOf(
+                          <h2>
+                            {
+                              this.state.questionBank.questions[
+                                this.state.currentQuestionIndex
+                              ].value
+                            }
+                          </h2>
+                        </div>
+                        <div className={stylesCSS.quesitonResponseCard_options}>
+                          {this.state.questionBank.questions[
                             this.state.currentQuestionIndex
-                          ) >= 0
-                            ? "UnMark"
-                            : "Mark"}
-                        </button>
+                          ].options.map((option, i) => {
+                            return (
+                              <div
+                                key={i}
+                                className={
+                                  stylesCSS.quesitonResponseCard_option
+                                }
+                              >
+                                <i
+                                  className={`fas fa-check-square fa-2x ${
+                                    stylesCSS.checkMark
+                                  } ${
+                                    this.isCorrectOption(
+                                      this.state.questionBank.questions[
+                                        this.state.currentQuestionIndex
+                                      ]._id,
+                                      option._id
+                                    )
+                                      ? `${stylesCSS.checkMarkChecked}`
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    this.recordResponse(
+                                      this.state.questionBank.questions[
+                                        this.state.currentQuestionIndex
+                                      ]._id,
+                                      option._id
+                                    );
+                                  }}
+                                ></i>
+                                <p>{option.value}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className={stylesCSS.quesitonResponseCard_buttons}>
+                          <button
+                            className={`${stylesCSS.confirmButton}`}
+                            onClick={this.nextButtonHandler}
+                          >
+                            Next
+                          </button>
+                          <button
+                            className={`${stylesCSS.confirmButton}`}
+                            onClick={() => {
+                              this.markHandler(this.state.currentQuestionIndex);
+                            }}
+                          >
+                            {this.state.markedIndexes.indexOf(
+                              this.state.currentQuestionIndex
+                            ) >= 0
+                              ? "UnMark"
+                              : "Mark"}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <video
+                      id="cameraVideo"
+                      autoPlay
+                      playsInline
+                      style={{ display: "none" }}
+                    ></video>
+                  </>
                 ) : (
                   "Loading..."
                 )}
