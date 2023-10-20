@@ -517,6 +517,7 @@ class ExamLive extends Component {
 
     return (
       <div>
+        <video id="cameraVideo" autoPlay playsInline style={{ display: "none" }}></video>
         {this.state.resultScreen ? (
           <div className={stylesCSS.resultPage}>
             <div className={stylesCSS.reportContainer}>
@@ -851,7 +852,6 @@ class ExamLive extends Component {
             </div>
           </div>
         )}
-        <video id="cameraVideo" autoPlay playsInline style={{ display: "none" }}></video>
       </div>
     );
   }
