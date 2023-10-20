@@ -88,6 +88,8 @@ class ExamLive extends Component {
     this.setState((prevState) => ({
       snapshots: [...prevState.snapshots, snapshot],
     }));
+    // log the snapshots array to the console
+    console.log(this.state.snapshots, 'snapshots');
   }
 
   startSnapshotInterval() {
