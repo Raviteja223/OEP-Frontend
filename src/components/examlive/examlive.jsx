@@ -79,9 +79,9 @@ class ExamLive extends Component {
       localStorage.setItem("tabSwitchCount", tabSwitchCount);
       alert("Warning: You have switched tabs. When you switch tab next time, your exam will be submitted automatically!");
 
-      if (tabSwitchCount == 4) {
+      if (tabSwitchCount >= 2) {
         // It's the second tab switch, submit the exam.
-        await this.submitResponses();
+        await this.submitResponsesWithoutConfirm();
       }
     }
   }
@@ -154,6 +154,7 @@ class ExamLive extends Component {
               timeRemaining: `0:0:0`,
             };
           });
+          this.submitResponsesWithoutConfirm();
         } else {
           // otherwise, show the updated countdown
           this.setState((state) => {
@@ -322,6 +323,46 @@ class ExamLive extends Component {
   async submitResponses() {
     var confirm = window.confirm("Sure you want to submit the responses?");
 
+    if (confirm) {
+      const request = {
+        examinerId: this.state.examinerId,
+        examId: this.state.examId,
+        candidateId: this.state.candidateId,
+        candidatePassword: this.state.candidatePassword,
+
+        responses: JSON.parse(JSON.stringify(this.state.responses)),
+      };
+
+      const response = await fetch(
+        process.env.REACT_APP_API_URI + "/examlive/getresult",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }
+      );
+
+      // console.log(request);
+
+      const data = await response.json();
+
+      if (data.message) {
+        alert(data.message);
+      } else {
+        this.setState((state) => {
+          return {
+            resultScreen: true,
+            result: data,
+          };
+        });
+      }
+    }
+  }
+
+  async submitResponsesWithoutConfirm() {
+    var confirm = true;
     if (confirm) {
       const request = {
         examinerId: this.state.examinerId,
