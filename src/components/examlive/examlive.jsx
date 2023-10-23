@@ -167,7 +167,6 @@ class ExamLive extends Component {
     );
 
     const data = await response.json();
-    console.log(data, 'data');
 
     if (data.message) {
       alert(data.message);
@@ -178,11 +177,15 @@ class ExamLive extends Component {
       // console.log(JSON.stringify(data.questionBank));
 
       this.setState((state) => {
+        const randomQuestions = data.questionBank.questions.sort(() => Math.random() - 0.5);
         return {
           startDateTime: moment(data.startDateTime).format(),
           endDateTime: moment(data.endDateTime).format(),
           // Set questions randomly
-          questionBank: data.questionBank,
+          questionBank: {
+            ...data.questionBank,
+            questions: randomQuestions,
+          },
           loadingQuestions: false,
         };
       });
