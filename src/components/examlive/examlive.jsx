@@ -59,6 +59,7 @@ class ExamLive extends Component {
 
     this.submitResponses = this.submitResponses.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    localStorage.setItem("tabSwitchCount", 0);
   }
 
   async startCamera() {
@@ -127,7 +128,7 @@ class ExamLive extends Component {
 
   async handleVisibilityChange() {
     if (document.hidden) {
-      if (this.state.tabSwitchCount < 2)
+      if (this.state.tabSwitchCount < 6)
         alert(
           "Warning: You have switched tabs. When you switch tab more than 3 times, your exam will be submitted automatically!"
         );
@@ -139,7 +140,7 @@ class ExamLive extends Component {
       this.setState({ tabSwitchCount });
       localStorage.setItem("tabSwitchCount", tabSwitchCount);
 
-      if (tabSwitchCount >= 3) {
+      if (tabSwitchCount >= 6) {
         // It's the second tab switch, submit the exam.
         await this.submitResponsesWithoutConfirm();
       }
