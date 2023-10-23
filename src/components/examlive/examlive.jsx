@@ -167,6 +167,7 @@ class ExamLive extends Component {
     );
 
     const data = await response.json();
+    console.log(data, 'data');
 
     if (data.message) {
       alert(data.message);
@@ -181,7 +182,7 @@ class ExamLive extends Component {
           startDateTime: moment(data.startDateTime).format(),
           endDateTime: moment(data.endDateTime).format(),
           // Set questions randomly
-          questionBank: data.questionBank.sort(() => Math.random() - 0.5),
+          questionBank: data.questionBank,
           loadingQuestions: false,
         };
       });
