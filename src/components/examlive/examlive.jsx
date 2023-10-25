@@ -128,7 +128,7 @@ class ExamLive extends Component {
 
   async handleVisibilityChange() {
     if (document.hidden) {
-      if (this.state.tabSwitchCount < 3)
+      if (this.state.tabSwitchCount <= 3)
         alert(
           "Warning: You have switched tabs. When you switch tab more than 3 times, your exam will be submitted automatically!"
         );
