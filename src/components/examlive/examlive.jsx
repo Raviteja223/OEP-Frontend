@@ -791,6 +791,22 @@ class ExamLive extends Component {
                               this.state.currentQuestionIndex
                             ].value
                           }
+                          {
+                            this.state.questionBank.questions[
+                              this.state.currentQuestionIndex
+                            ].snippetUrl && (
+                              <div>
+                                <img
+                                  src={
+                                    this.state.questionBank.questions[
+                                      this.state.currentQuestionIndex
+                                    ].snippetUrl
+                                  }
+                                  alt="snippet"
+                                />
+                              </div>
+                            )
+                          }
                         </h2>
                       </div>
                       <div className={stylesCSS.quesitonResponseCard_options}>
