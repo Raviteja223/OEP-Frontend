@@ -20,6 +20,7 @@ class QuestionBank extends Component{
             newQuestion:{
                 marks: 1,
                 value: "",
+                snippetUrl: "",
                 options: [
                     "",
                 ],
@@ -106,12 +107,14 @@ class QuestionBank extends Component{
     async newQuestionStateUpdate(event){
         var newQuestion = document.getElementById("newQuestion").value;
         var newOptions = Array.from(document.getElementsByClassName("newOption")).map(ele => ele.value);
+        var newSnippetUrl = document.getElementById("newSnippetUrl").value;
 
         this.setState((state)=>{
             const newState = JSON.parse(JSON.stringify(state));
             
             newState.newQuestion = {
                 value: newQuestion,
+                snippetUrl: newSnippetUrl || "",
                 marks: 1,
                 options: newOptions,
                 correctOptionIndx: state.newQuestion.correctOptionIndx
@@ -125,6 +128,7 @@ class QuestionBank extends Component{
 
         const newOptions = this.state.newQuestion.options.map(e=>({ value:e }));
         const newCorrectOptionValue = this.state.newQuestion.options[this.state.newQuestion.correctOptionIndx];
+        const newSnippetUrl = this.state.newQuestion.snippetUrl;
 
         this.setState((state)=>{
             const newState = JSON.parse(JSON.stringify(state));
@@ -140,6 +144,7 @@ class QuestionBank extends Component{
                 newState.questionBank.questions.push({
                     marks: this.state.newQuestion.marks,
                     value: this.state.newQuestion.value,
+                    snippetUrl: newSnippetUrl || "",
                     options: newOptions,
                     correctOptionValue: newCorrectOptionValue,
                 })
@@ -240,6 +245,7 @@ class QuestionBank extends Component{
                         var newMarks = 1;
                         var newCorrectOptionValue = "";
                         var newOptions = [];
+                        var newSnippetUrl = "";
 
                         for (const [key, value] of Object.entries(ele)) {
                             if(key.split('_')[0]==="option"){
@@ -260,6 +266,10 @@ class QuestionBank extends Component{
         
                                 case "correct":
                                     newCorrectOptionValue = value;
+                                break;
+
+                                case "snippet":
+                                    newSnippetUrl = value || "";
                                 break;
                     
                                 default:
@@ -288,6 +298,7 @@ class QuestionBank extends Component{
                             newState.questionBank.questions.push({
                                 marks: newMarks,
                                 value: newQuestion,
+                                snippetUrl: newSnippetUrl || "",
                                 options: newOptions,
                                 correctOptionValue: newCorrectOptionValue,
                             })
@@ -354,7 +365,10 @@ class QuestionBank extends Component{
                                                         <div className={stylesCSS.deleteButton} onClick={()=>this.delQuestion(e._id)}><p>delete</p></div>
                                                     </div>
                                                 </td>
-                                                <td className={`${stylesCSS.td} ${stylesCSS.questionTD}`}>{e.value}</td>
+                                                <td className={`${stylesCSS.td} ${stylesCSS.questionTD}`}>
+                                                    {e.value}
+                                                    {e.snippetUrl && <img src={e.snippetUrl} alt="Snippet" />}
+                                                </td>
                                                 <td className={stylesCSS.td}>
                                                     <table className={stylesCSS.table}>
                                                         <tbody>
@@ -378,6 +392,9 @@ class QuestionBank extends Component{
                                         <div className={stylesCSS.addNewQuestionCard}>
                                             <div className={stylesCSS.addNewQuestionCardRow}>
                                                 <input onChange={this.newQuestionStateUpdate} placeholder="Question" className={`${stylesCSS.input} ${stylesCSS.questioninput}`} id="newQuestion" type="text"/>
+                                            </div>
+                                            <div className={stylesCSS.addNewQuestionCardRow}>
+                                                <input onChange={this.newQuestionStateUpdate} placeholder="Snippet Url" className={`${stylesCSS.input} ${stylesCSS.questioninput}`} id="newSnippetUrl" type="text"/>
                                             </div>
                                             {
                                                 this.state.newQuestion.options.map((option, indx)=>{
