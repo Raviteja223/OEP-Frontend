@@ -795,7 +795,7 @@ class ExamLive extends Component {
                             this.state.questionBank.questions[
                               this.state.currentQuestionIndex
                             ].snippetUrl && (
-                              <div>
+                              <div style={{ paddingTop: "5px" }}>
                                 <img
                                   src={
                                     this.state.questionBank.questions[
