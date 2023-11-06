@@ -20,6 +20,7 @@ class QuestionBank extends Component{
             newQuestion:{
                 marks: 1,
                 value: "",
+                questionType: "mcq",
                 snippetUrl: "",
                 options: [
                     "",
@@ -114,10 +115,11 @@ class QuestionBank extends Component{
             
             newState.newQuestion = {
                 value: newQuestion,
+                questionType: state.newQuestion.questionType,
                 snippetUrl: newSnippetUrl || "",
-                marks: 1,
-                options: newOptions,
-                correctOptionIndx: state.newQuestion.correctOptionIndx
+                marks: state.newQuestion.questionType === "mcq" ? 1 : 10,
+                options: state.newQuestion.questionType === "mcq" ? newOptions : [],
+                correctOptionIndx: state.newQuestion.questionType === "mcq" ? state.newQuestion.correctOptionIndx : -1
             }
 
             return newState;
@@ -126,8 +128,9 @@ class QuestionBank extends Component{
 
     async postNewQuestion(){
 
-        const newOptions = this.state.newQuestion.options.map(e=>({ value:e }));
-        const newCorrectOptionValue = this.state.newQuestion.options[this.state.newQuestion.correctOptionIndx];
+        const newQuestionType = this.state.newQuestion.questionType;
+        const newOptions = newQuestionType === "mcq" ? this.state.newQuestion.options.map(e=>({ value:e })) : [];
+        const newCorrectOptionValue = newQuestionType === "mcq" ? this.state.newQuestion.options[this.state.newQuestion.correctOptionIndx] : "";
         const newSnippetUrl = this.state.newQuestion.snippetUrl;
 
         this.setState((state)=>{
@@ -144,9 +147,19 @@ class QuestionBank extends Component{
                 newState.questionBank.questions.push({
                     marks: this.state.newQuestion.marks,
                     value: this.state.newQuestion.value,
+                    questionType: newQuestionType,
                     snippetUrl: newSnippetUrl || "",
                     options: newOptions,
                     correctOptionValue: newCorrectOptionValue,
+                })
+            } else if (!duplicate && this.state.newQuestion.value !=="" && this.state.newQuestion.marks>=0 ){
+                newState.questionBank.questions.push({
+                    marks: this.state.newQuestion.marks,
+                    value: this.state.newQuestion.value,
+                    questionType: newQuestionType,
+                    snippetUrl: newSnippetUrl || "",
+                    options: [],
+                    correctOptionValue: "",
                 })
             }
             return newState;
@@ -333,114 +346,271 @@ class QuestionBank extends Component{
 
 
     render(){
-        return(
-            <div>
-                <Navbar current="Question Banks"/>
-                {this.state.loading?
-                <center>Loading..Please Wait.</center>
-                :
-                <div>
-                    <div className={stylesCSS.questionBankDetails}>
-                        <HeaderBar 
-                            header={this.state.questionBank.questionBankName} 
-                            sideHeader={`${this.state.questionBank.questions.length} ${(this.state.questionBank.questions.length>1)?" questions":" question"}`} 
-                            backHref="/questionbanks"
-                        />
-                        <div className={stylesCSS.listBlock}>
-                            <table className={stylesCSS.table}>
-                                <thead>
-                                    <tr className={stylesCSS.tableRow}>
-                                        <th>No</th>
-                                        <th>Question</th>
-                                        <th>Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.questionBank.questions.map((e,indx)=>{
+        return (
+          <div>
+            <Navbar current="Question Banks" />
+            {this.state.loading ? (
+              <center>Loading..Please Wait.</center>
+            ) : (
+              <div>
+                <div className={stylesCSS.questionBankDetails}>
+                  <HeaderBar
+                    header={this.state.questionBank.questionBankName}
+                    sideHeader={`${this.state.questionBank.questions.length} ${
+                      this.state.questionBank.questions.length > 1
+                        ? " questions"
+                        : " question"
+                    }`}
+                    backHref="/questionbanks"
+                  />
+                  <div className={stylesCSS.listBlock}>
+                    <table className={stylesCSS.table}>
+                      <thead>
+                        <tr className={stylesCSS.tableRow}>
+                          <th>No</th>
+                          <th>Question</th>
+                          <th>Options</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.questionBank.questions.map((e, indx) => {
+                          return (
+                            <tr
+                              key={indx}
+                              className={`${stylesCSS.tableRow} ${stylesCSS.tableEntry}`}
+                            >
+                              <td className={stylesCSS.td}>
+                                <div className={stylesCSS.customColumn}>
+                                  <div>{indx + 1}</div>
+                                  <div
+                                    className={stylesCSS.deleteButton}
+                                    onClick={() => this.delQuestion(e._id)}
+                                  >
+                                    <p>delete</p>
+                                  </div>
+                                </div>
+                              </td>
+                              <td
+                                className={`${stylesCSS.td} ${stylesCSS.questionTD}`}
+                              >
+                                {e.value}
+                                {e.snippetUrl && (
+                                  <img src={e.snippetUrl} alt="Snippet" />
+                                )}
+                              </td>
+                              <td className={stylesCSS.td}>
+                                {e.questionType === "mcq" ? (
+                                  <table className={stylesCSS.table}>
+                                    <tbody>
+                                      {e.options.map((option, i) => {
                                         return (
-                                            <tr key={indx} className={`${stylesCSS.tableRow} ${stylesCSS.tableEntry}`}>
-                                                <td className={stylesCSS.td}>
-                                                    <div className={stylesCSS.customColumn}>
-                                                        <div>{indx+1}</div>
-                                                        <div className={stylesCSS.deleteButton} onClick={()=>this.delQuestion(e._id)}><p>delete</p></div>
-                                                    </div>
-                                                </td>
-                                                <td className={`${stylesCSS.td} ${stylesCSS.questionTD}`}>
-                                                    {e.value}
-                                                    {e.snippetUrl && <img src={e.snippetUrl} alt="Snippet" />}
-                                                </td>
-                                                <td className={stylesCSS.td}>
-                                                    <table className={stylesCSS.table}>
-                                                        <tbody>
-                                                            {e.options.map((option, i)=>{
-                                                                return (
-                                                                    <tr key={i}><td className={`${stylesCSS.td} ${stylesCSS.optionsTD} ${(option.value===e.correctOptionValue)?`${stylesCSS.correctOptionTD}`:""}`}>{option.value}</td></tr>
-                                                                )
-                                                            })}
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                            <div className={stylesCSS.addNewQuestionSection}>
-                                <div>
-                                    <h2>Add New Question</h2>
-                                    <div>
-                                        <div className={stylesCSS.addNewQuestionCard}>
-                                            <div className={stylesCSS.addNewQuestionCardRow}>
-                                                <input onChange={this.newQuestionStateUpdate} placeholder="Question" className={`${stylesCSS.input} ${stylesCSS.questioninput}`} id="newQuestion" type="text"/>
-                                            </div>
-                                            <div className={stylesCSS.addNewQuestionCardRow}>
-                                                <input onChange={this.newQuestionStateUpdate} placeholder="Snippet Url" className={`${stylesCSS.input} ${stylesCSS.questioninput}`} id="newSnippetUrl" type="text"/>
-                                            </div>
-                                            {
-                                                this.state.newQuestion.options.map((option, indx)=>{
-                                                    return (
-                                                        <div key={indx} className={stylesCSS.addNewQuestionCardRow}>
-                                                            <div className={stylesCSS.addNewText}>
-                                                                <i onClick={this.changeNewQuestionCorrectOptionIndx} id={indx} className={`fas fa-check-square fa-2x ${stylesCSS.checkMark} ${(indx===this.state.newQuestion.correctOptionIndx)?`${stylesCSS.checkMarkChecked}`:""}`}></i>
-                                                            </div>
-                                                            <div className={stylesCSS.addNewText}>
-                                                                <h2>{indx+1}</h2>
-                                                            </div>
-                                                            <input value={option} onChange={this.newQuestionStateUpdate} placeholder="Option" className={`newOption ${stylesCSS.input} ${stylesCSS.optionsinput}`} type="text"/>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                            <div className={stylesCSS.addNewOptionCardButtonRow}>
-                                                <button className={`${stylesCSS.addButton} ${stylesCSS.removeOption}`} onClick={this.removeOption}>Remove Last Option</button>
-                                                <button className={`${stylesCSS.addButton} ${stylesCSS.addOption}`} onClick={this.addOption}>Add Option</button>
-                                            </div>
-                                            <div className={stylesCSS.addNewQuestionCardButtonRow}>
-                                                <button className={stylesCSS.addButton} onClick={this.postNewQuestion}>Add Question</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h2>Or Select a Spreadsheet</h2>
-                                    <p>Make sure you have first row with these column name: <br/>
-                                        “question”, “option_1”, ”option_2”, ”option_3”, ... , ”correct”.<br/>
-                                        correct column should have a value identical to one of the option 
-                                    </p>
-                                    <div>
-                                        <input type="file" id="input-excel" accept=".xls,.xlsx" onChange = {this.inputExcel} />
-                                    </div>
-                                </div>
+                                          <tr key={i}>
+                                            <td
+                                              className={`${stylesCSS.td} ${
+                                                stylesCSS.optionsTD
+                                              } ${
+                                                option.value ===
+                                                e.correctOptionValue
+                                                  ? `${stylesCSS.correctOptionTD}`
+                                                  : ""
+                                              }`}
+                                            >
+                                              {option.value}
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                ) : (
+                                  "-"
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    <div className={stylesCSS.addNewQuestionSection}>
+                      <div>
+                        <h2>Add New Question</h2>
+                        <div>
+                          <div className={stylesCSS.addNewQuestionCard}>
+                            <div className={stylesCSS.addNewQuestionCardRow}>
+                              <input
+                                onChange={this.newQuestionStateUpdate}
+                                placeholder="Question"
+                                className={`${stylesCSS.input} ${stylesCSS.questioninput}`}
+                                id="newQuestion"
+                                type="text"
+                              />
                             </div>
+                            <div className={stylesCSS.addNewQuestionCardRow}>
+                              <input
+                                onChange={this.newQuestionStateUpdate}
+                                placeholder="Snippet Url"
+                                className={`${stylesCSS.input} ${stylesCSS.questioninput}`}
+                                id="newSnippetUrl"
+                                type="text"
+                              />
+                            </div>
+                            <div
+                              className={stylesCSS.addNewQuestionCardRow}
+                              style={{ display: "flex", flexDirection: "row" }}
+                            >
+                              <label style={{ marginRight: "10px" }}>
+                                <input
+                                  type="radio"
+                                  name="questionType"
+                                  value="mcq"
+                                  checked={
+                                    this.state.newQuestion.questionType ===
+                                    "mcq"
+                                  }
+                                  onChange={() =>
+                                    this.setState({
+                                      newQuestion: {
+                                        ...this.state.newQuestion,
+                                        questionType: "mcq",
+                                      },
+                                    })
+                                  }
+                                />
+                                MCQ
+                              </label>
+                              <label>
+                                <input
+                                  type="radio"
+                                  name="questionType"
+                                  value="code"
+                                  checked={
+                                    this.state.newQuestion.questionType ===
+                                    "code"
+                                  }
+                                  onChange={() =>
+                                    this.setState({
+                                      newQuestion: {
+                                        ...this.state.newQuestion,
+                                        questionType: "code",
+                                      },
+                                    })
+                                  }
+                                />
+                                Code
+                              </label>
+                            </div>
+                            <div className={stylesCSS.addNewQuestionCardRow}>
+                              {this.state.newQuestion.questionType === "mcq" ? (
+                                <div>
+                                  {this.state.newQuestion.options.map(
+                                    (option, indx) => {
+                                      return (
+                                        <div
+                                          key={indx}
+                                          className={
+                                            stylesCSS.addNewQuestionCardRow
+                                          }
+                                        >
+                                          <div className={stylesCSS.addNewText}>
+                                            <i
+                                              onClick={
+                                                this
+                                                  .changeNewQuestionCorrectOptionIndx
+                                              }
+                                              id={indx}
+                                              className={`fas fa-check-square fa-2x ${
+                                                stylesCSS.checkMark
+                                              } ${
+                                                indx ===
+                                                this.state.newQuestion
+                                                  .correctOptionIndx
+                                                  ? `${stylesCSS.checkMarkChecked}`
+                                                  : ""
+                                              }`}
+                                            ></i>
+                                          </div>
+                                          <div className={stylesCSS.addNewText}>
+                                            <h2>{indx + 1}</h2>
+                                          </div>
+                                          <input
+                                            value={option}
+                                            onChange={
+                                              this.newQuestionStateUpdate
+                                            }
+                                            placeholder="Option"
+                                            className={`newOption ${stylesCSS.input} ${stylesCSS.optionsinput}`}
+                                            type="text"
+                                          />
+                                        </div>
+                                      );
+                                    }
+                                  )}
+                                  <div
+                                    className={
+                                      stylesCSS.addNewOptionCardButtonRow
+                                    }
+                                  >
+                                    <button
+                                      className={`${stylesCSS.addButton} ${stylesCSS.removeOption}`}
+                                      onClick={this.removeOption}
+                                    >
+                                      Remove Last Option
+                                    </button>
+                                    <button
+                                      className={`${stylesCSS.addButton} ${stylesCSS.addOption}`}
+                                      onClick={this.addOption}
+                                    >
+                                      Add Option
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                            <div
+                              className={stylesCSS.addNewQuestionCardButtonRow}
+                            >
+                              <button
+                                className={stylesCSS.addButton}
+                                onClick={this.postNewQuestion}
+                              >
+                                Add Question
+                              </button>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div>
+                        <h2>Or Select a Spreadsheet</h2>
+                        <p>
+                          Make sure you have first row with these column name:{" "}
+                          <br />
+                          “question”, “option_1”, ”option_2”, ”option_3”, ... ,
+                          ”correct”.
+                          <br />
+                          correct column should have a value identical to one of
+                          the option
+                        </p>
+                        <div>
+                          <input
+                            type="file"
+                            id="input-excel"
+                            accept=".xls,.xlsx"
+                            onChange={this.inputExcel}
+                          />
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                }
-                <footer className={stylesCSS.footerContainer}>
-                    <Footer/>
-                </footer>
-            </div>
-        )
+              </div>
+            )}
+            <footer className={stylesCSS.footerContainer}>
+              <Footer />
+            </footer>
+          </div>
+        );
     }
 }
 
