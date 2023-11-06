@@ -143,7 +143,7 @@ class QuestionBank extends Component{
                     duplicate = true;
                 }
             })
-            if(!duplicate && this.state.newQuestion.value !=="" && newOptions[0].value!=="" && newCorrectOptionValue!=="" && this.state.newQuestion.marks>=0 ){
+            if(!duplicate && this.state.newQuestion.value !=="" && newOptions.length && newOptions[0].value!=="" && newCorrectOptionValue!=="" && this.state.newQuestion.marks>=0 ){
                 newState.questionBank.questions.push({
                     marks: this.state.newQuestion.marks,
                     value: this.state.newQuestion.value,
