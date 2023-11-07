@@ -458,7 +458,7 @@ class QuestionBank extends Component{
                               className={stylesCSS.addNewQuestionCardRow}
                               style={{ display: "flex", flexDirection: "row" }}
                             >
-                              <label style={{ marginRight: "10px" }}>
+                              <label style={{ marginRight: "25px" }}>
                                 <input
                                   type="radio"
                                   name="questionType"

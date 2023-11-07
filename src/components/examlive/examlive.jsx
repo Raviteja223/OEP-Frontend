@@ -8,6 +8,8 @@ import Footer from "./../modules/footer/footer";
 
 import stylesCSS from "./styles.module.css";
 
+import Editor from '@monaco-editor/react';
+
 class ExamLive extends Component {
   constructor(props) {
     super(props);
@@ -307,6 +309,7 @@ class ExamLive extends Component {
               newState.responses.splice(i, 1);
 
               newState.responses.push({
+                questionType: "mcq",
                 questionId: questionId,
                 optionId: optionId,
               });
@@ -323,6 +326,7 @@ class ExamLive extends Component {
         var newState = JSON.parse(JSON.stringify(state));
 
         newState.responses.push({
+          questionType: "mcq",
           questionId: questionId,
           optionId: optionId,
         });
@@ -334,6 +338,48 @@ class ExamLive extends Component {
     }
     // console.log(this.state.responses);
     // console.log(this.state.answeredIndexes);
+  }
+
+  async recordCodeResponse(questionId, code) {
+    // console.log(`${questionId} ${code}`);
+    const foundResponse = this.state.responses.find(
+      (response) => response.questionId === questionId
+    );
+    if (foundResponse !== undefined) {
+      for (let i = 0; i < this.state.responses.length; i++) {
+        if (this.state.responses[i].questionId === questionId) {
+            await this.setState((state) => {
+              var newState = JSON.parse(JSON.stringify(state));
+
+              newState.responses.splice(i, 1);
+
+              newState.responses.push({
+                questionType: "code",
+                questionId: questionId,
+                code: code,
+              });
+
+              return newState;
+            });
+        }
+        break; //might save an issue
+      }
+    } else {
+      // a new quesiton response
+      await this.setState((state) => {
+        var newState = JSON.parse(JSON.stringify(state));
+
+        newState.responses.push({
+          questionType: "code",
+          questionId: questionId,
+          code: code,
+        });
+
+        newState.answeredIndexes.push(this.state.currentQuestionIndex);
+
+        return newState;
+      });
+    }
   }
 
   async nextButtonHandler() {
@@ -401,7 +447,6 @@ class ExamLive extends Component {
         examId: this.state.examId,
         candidateId: this.state.candidateId,
         candidatePassword: this.state.candidatePassword,
-
         responses: JSON.parse(JSON.stringify(this.state.responses)),
       };
 
@@ -442,7 +487,6 @@ class ExamLive extends Component {
         examId: this.state.examId,
         candidateId: this.state.candidateId,
         candidatePassword: this.state.candidatePassword,
-
         responses: JSON.parse(JSON.stringify(this.state.responses)),
       };
 
@@ -791,59 +835,84 @@ class ExamLive extends Component {
                               this.state.currentQuestionIndex
                             ].value
                           }
-                          {
-                            this.state.questionBank.questions[
-                              this.state.currentQuestionIndex
-                            ].snippetUrl && (
-                              <div style={{ paddingTop: "10px" }}>
-                                <img
-                                  src={
-                                    this.state.questionBank.questions[
-                                      this.state.currentQuestionIndex
-                                    ].snippetUrl
-                                  }
-                                  alt="snippet"
-                                />
-                              </div>
-                            )
-                          }
+                          {this.state.questionBank.questions[
+                            this.state.currentQuestionIndex
+                          ].snippetUrl && (
+                            <div style={{ paddingTop: "10px" }}>
+                              <img
+                                src={
+                                  this.state.questionBank.questions[
+                                    this.state.currentQuestionIndex
+                                  ].snippetUrl
+                                }
+                                alt="snippet"
+                              />
+                            </div>
+                          )}
                         </h2>
                       </div>
-                      <div className={stylesCSS.quesitonResponseCard_options}>
+                      <div>
                         {this.state.questionBank.questions[
                           this.state.currentQuestionIndex
-                        ].options.map((option, i) => {
-                          return (
-                            <div
-                              key={i}
-                              className={stylesCSS.quesitonResponseCard_option}
-                            >
-                              <i
-                                className={`fas fa-check-square fa-2x ${
-                                  stylesCSS.checkMark
-                                } ${
-                                  this.isCorrectOption(
-                                    this.state.questionBank.questions[
-                                      this.state.currentQuestionIndex
-                                    ]._id,
-                                    option._id
-                                  )
-                                    ? `${stylesCSS.checkMarkChecked}`
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  this.recordResponse(
-                                    this.state.questionBank.questions[
-                                      this.state.currentQuestionIndex
-                                    ]._id,
-                                    option._id
-                                  );
-                                }}
-                              ></i>
-                              <p>{option.value}</p>
-                            </div>
-                          );
-                        })}
+                        ].questionType === "mcq" ? (
+                          <div
+                            className={stylesCSS.quesitonResponseCard_options}
+                          >
+                            {this.state.questionBank.questions[
+                              this.state.currentQuestionIndex
+                            ].options.map((option, i) => {
+                              return (
+                                <div
+                                  key={i}
+                                  className={
+                                    stylesCSS.quesitonResponseCard_option
+                                  }
+                                >
+                                  <i
+                                    className={`fas fa-check-square fa-2x ${
+                                      stylesCSS.checkMark
+                                    } ${
+                                      this.isCorrectOption(
+                                        this.state.questionBank.questions[
+                                          this.state.currentQuestionIndex
+                                        ]._id,
+                                        option._id
+                                      )
+                                        ? `${stylesCSS.checkMarkChecked}`
+                                        : ""
+                                    }`}
+                                    onClick={() => {
+                                      this.recordResponse(
+                                        this.state.questionBank.questions[
+                                          this.state.currentQuestionIndex
+                                        ]._id,
+                                        option._id
+                                      );
+                                    }}
+                                  ></i>
+                                  <p>{option.value}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className={stylesCSS.quesitonResponseCard_option}>
+                            <Editor
+                              height="50vh"
+                              theme="vs-dark"
+                              defaultLanguage="javascript"
+                              defaultValue=""
+                              onChange={(value, event) => {
+                                this.recordCodeResponse(
+                                  this.state.questionBank.questions[
+                                    this.state.currentQuestionIndex
+                                  ]._id,
+                                  value
+                                );
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
                       <div className={stylesCSS.quesitonResponseCard_buttons}>
                         <button
@@ -866,7 +935,12 @@ class ExamLive extends Component {
                         </button>
                       </div>
                     </div>
-                    <video id="cameraVideo" autoPlay playsInline style={{ display: "none" }}></video>
+                    <video
+                      id="cameraVideo"
+                      autoPlay
+                      playsInline
+                      style={{ display: "none" }}
+                    ></video>
                   </div>
                 ) : (
                   "Loading..."
