@@ -470,7 +470,7 @@ class ExamLive extends Component {
       } else {
         this.setState((state) => {
           return {
-            resultScreen: false,
+            resultScreen: true,
             result: data,
           };
         });
@@ -510,7 +510,7 @@ class ExamLive extends Component {
       } else {
         this.setState((state) => {
           return {
-            resultScreen: false,
+            resultScreen: true,
             result: data,
           };
         });
@@ -588,7 +588,9 @@ class ExamLive extends Component {
                   <h2>
                     {this.state.result.Marks}/
                     {this.state.questionBank.questions
-                      ? this.state.questionBank.questions.length
+                      ? this.state.questionBank.questions.filter((que) => {
+                          return que.questionType === "mcq";
+                        }).length
                       : ""}
                   </h2>{" "}
                   <p> in </p> <h2>{this.state.result.examName}</h2>
@@ -610,12 +612,20 @@ class ExamLive extends Component {
                               className={stylesCSS.infoBar}
                               style={{
                                 width:
-                                  this.state.questionBank.questions.length * 5 +
+                                  this.state.questionBank.questions.filter(
+                                    (que) => {
+                                      return que.questionType === "mcq";
+                                    }
+                                  ).length * 5 +
                                   "px",
                               }}
                             ></div>
                             <p>
-                              <b>{this.state.questionBank.questions.length}</b>
+                              <b>
+                                {this.state.questionBank.questions.filter((que) => {
+                                  return que.questionType === "mcq";
+                                }).length}
+                              </b>
                             </p>
                           </div>
                         </td>
@@ -631,11 +641,17 @@ class ExamLive extends Component {
                             <div
                               className={stylesCSS.infoBar}
                               style={{
-                                width: this.state.responses.length * 5 + "px",
+                                width: this.state.responses.filter((res) => {
+                                  return res.questionType === "mcq";
+                                }).length * 5 + "px",
                               }}
                             ></div>
                             <p>
-                              <b>{this.state.responses.length}</b>
+                              <b>
+                                {this.state.responses.filter((res) => {
+                                  return res.questionType === "mcq";
+                                }).length}
+                              </b>
                             </p>
                           </div>
                         </td>
@@ -672,7 +688,9 @@ class ExamLive extends Component {
                               className={stylesCSS.infoBar}
                               style={{
                                 width:
-                                  (this.state.responses.length -
+                                  (this.state.responses.filter((res) => {
+                                    return res.questionType === "mcq";
+                                  }).length -
                                     this.state.result.Marks) *
                                     5 +
                                   "px",
@@ -680,7 +698,9 @@ class ExamLive extends Component {
                             ></div>
                             <p>
                               <b>
-                                {this.state.responses.length -
+                                {this.state.responses.filter((res) => {
+                                  return res.questionType === "mcq";
+                                }).length -
                                   this.state.result.Marks}
                               </b>
                             </p>
