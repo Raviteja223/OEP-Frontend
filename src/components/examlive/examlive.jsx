@@ -470,7 +470,7 @@ class ExamLive extends Component {
       } else {
         this.setState((state) => {
           return {
-            resultScreen: true,
+            resultScreen: false,
             result: data,
           };
         });
@@ -510,7 +510,7 @@ class ExamLive extends Component {
       } else {
         this.setState((state) => {
           return {
-            resultScreen: true,
+            resultScreen: false,
             result: data,
           };
         });
