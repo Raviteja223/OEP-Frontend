@@ -9,12 +9,14 @@ import Footer from "./../modules/footer/footer";
 import stylesCSS from "./styles.module.css";
 
 import Editor from '@monaco-editor/react';
+import Babel from '@babel/standalone';
 
 class ExamLive extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      codeOutput: "",
       cameraStream: null,
       snapshots: [], // to store captured snapshots
       snapshotInterval: null, // to control the interval
@@ -537,6 +539,19 @@ class ExamLive extends Component {
     }
   }
 
+  executeCode() {
+    const code = this.state.responses.find(
+      (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
+    ).code;
+    const transpiledCode = Babel.transform(code, {
+      presets: ['env'],
+    }).code;
+
+    // eslint-disable-next-line no-eval
+    const result = eval(transpiledCode);
+    this.setState({ codeOutput: result });
+  }
+
   generatelisArr() {
     var listArr = [];
 
@@ -931,6 +946,13 @@ class ExamLive extends Component {
                                 );
                               }}
                             />
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                              <button onClick={this.executeCode}>Run</button>
+                              <p>Output</p>
+                            </div>
+                            <div>
+                              {this.state.codeOutput}
+                            </div>
                           </div>
                         )}
                       </div>
