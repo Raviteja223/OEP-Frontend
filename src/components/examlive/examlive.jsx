@@ -543,17 +543,33 @@ class ExamLive extends Component {
 
   executeCode() {
     console.log(this.state.responses, "responses");
-    const code = this.state.responses.find(
-      (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
-    ).code;
-    const transpiledCode = Babel.transform(code, {
-      presets: ['env'],
-    }).code;
-
-    // eslint-disable-next-line no-eval
-    const result = eval(transpiledCode);
-    this.setState({ codeOutput: result });
+  
+    try {
+      const codeObj = this.state.responses.find(
+        (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
+      );
+      
+      if (!codeObj) {
+        // Handle scenario where code object is not found
+        console.error('Code object not found for the current question');
+        return;
+      }
+  
+      const code = codeObj.code;
+  
+      const transpiledCode = Babel.transform(code, {
+        presets: ['@babel/preset-env'],
+      }).code;
+  
+      // eslint-disable-next-line no-eval
+      const result = eval(transpiledCode);
+      this.setState({ codeOutput: result });
+    } catch (error) {
+      console.error('Error during code execution/transpilation:', error);
+      // Handle or log the error appropriately
+    }
   }
+  
 
   generatelisArr() {
     var listArr = [];
