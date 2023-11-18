@@ -9,7 +9,6 @@ import Footer from "./../modules/footer/footer";
 import stylesCSS from "./styles.module.css";
 
 import Editor from '@monaco-editor/react';
-import Babel from '@babel/standalone';
 
 class ExamLive extends Component {
   constructor(props) {
@@ -556,13 +555,8 @@ class ExamLive extends Component {
       }
   
       const code = codeObj.code;
-  
-      const transpiledCode = Babel.transform(code, {
-        presets: ['@babel/preset-env'],
-      }).code;
-  
       // eslint-disable-next-line no-eval
-      const result = eval(transpiledCode);
+      const result = eval(code);
       this.setState({ codeOutput: result });
     } catch (error) {
       console.error('Error during code execution/transpilation:', error);
