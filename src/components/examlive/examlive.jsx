@@ -9,7 +9,7 @@ import Footer from "./../modules/footer/footer";
 import stylesCSS from "./styles.module.css";
 
 import Editor from '@monaco-editor/react';
-import Babel from '@babel/standalone';
+import Babel from '@babel/core';
 
 class ExamLive extends Component {
   constructor(props) {
