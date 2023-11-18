@@ -557,6 +557,7 @@ class ExamLive extends Component {
       const code = codeObj.code;
       // eslint-disable-next-line no-eval
       const result = eval(code);
+      console.log(result, "result code")
       this.setState({ codeOutput: result });
       console.log(this.state.codeOutput, "codeOutput")
     } catch (error) {
