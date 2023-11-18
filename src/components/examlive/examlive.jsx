@@ -601,6 +601,7 @@ class ExamLive extends Component {
   
     console.log(output, "output code");
     console.log(result, "result code");
+    this.setState({ codeOutput: output });
     return { output, result };
   }
   
