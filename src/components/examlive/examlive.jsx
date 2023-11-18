@@ -63,6 +63,7 @@ class ExamLive extends Component {
 
     this.submitResponses = this.submitResponses.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+    this.executeCode = this.executeCode.bind(this);
     localStorage.setItem("tabSwitchCount", 0);
   }
 
@@ -382,6 +383,7 @@ class ExamLive extends Component {
         return newState;
       });
     }
+    console.log(this.state.responses, "responses code");
   }
 
   async nextButtonHandler() {
@@ -540,6 +542,7 @@ class ExamLive extends Component {
   }
 
   executeCode() {
+    console.log(this.state.responses, "responses");
     const code = this.state.responses.find(
       (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
     ).code;
