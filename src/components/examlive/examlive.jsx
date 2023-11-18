@@ -540,8 +540,41 @@ class ExamLive extends Component {
     }
   }
 
+  // executeCode() {
+  //   console.log(this.state.responses, "responses");
+  
+  //   try {
+  //     const codeObj = this.state.responses.find(
+  //       (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
+  //     );
+      
+  //     if (!codeObj) {
+  //       // Handle scenario where code object is not found
+  //       console.error('Code object not found for the current question');
+  //       return;
+  //     }
+  
+  //     const code = codeObj.code;
+  //     // eslint-disable-next-line no-eval
+  //     const result = eval(code);
+  //     console.log(result, "result code")
+  //     this.setState({ codeOutput: result });
+  //     console.log(this.state.codeOutput, "codeOutput")
+  //   } catch (error) {
+  //     console.error('Error during code execution/transpilation:', error);
+  //     // Handle or log the error appropriately
+  //   }
+  // }
+
   executeCode() {
-    console.log(this.state.responses, "responses");
+    let output = '';
+    let result;
+  
+    // Override console.log to capture its output
+    const originalConsoleLog = console.log;
+    console.log = (message) => {
+      output += message + '\n';
+    };
   
     try {
       const codeObj = this.state.responses.find(
@@ -555,16 +588,22 @@ class ExamLive extends Component {
       }
   
       const code = codeObj.code;
-      // eslint-disable-next-line no-eval
-      const result = eval(code);
-      console.log(result, "result code")
-      this.setState({ codeOutput: result });
-      console.log(this.state.codeOutput, "codeOutput")
+      // Use eval() to execute the code
+      result = eval(code);
     } catch (error) {
-      console.error('Error during code execution/transpilation:', error);
-      // Handle or log the error appropriately
+      // Handle any errors that occur during execution
+      console.error('Error executing code:', error);
+      output += 'Error: ' + error + '\n';
+    } finally {
+      // Restore the original console.log
+      console.log = originalConsoleLog;
     }
+  
+    console.log(output, "output code");
+    console.log(result, "result code");
+    return { output, result };
   }
+  
   
 
   generatelisArr() {
