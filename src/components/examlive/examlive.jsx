@@ -558,6 +558,7 @@ class ExamLive extends Component {
       // eslint-disable-next-line no-eval
       const result = eval(code);
       this.setState({ codeOutput: result });
+      console.log(this.state.codeOutput, "codeOutput")
     } catch (error) {
       console.error('Error during code execution/transpilation:', error);
       // Handle or log the error appropriately
