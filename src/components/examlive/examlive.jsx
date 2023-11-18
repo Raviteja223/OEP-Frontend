@@ -9,7 +9,8 @@ import Footer from "./../modules/footer/footer";
 import stylesCSS from "./styles.module.css";
 
 import Editor from '@monaco-editor/react';
-import Babel from '@babel/core';
+import { transform } from '@babel/core';
+import presetEnv from '@babel/preset-env';
 
 class ExamLive extends Component {
   constructor(props) {
@@ -548,20 +549,18 @@ class ExamLive extends Component {
       const codeObj = this.state.responses.find(
         (response) => response.questionId === this.state.questionBank.questions[this.state.currentQuestionIndex]._id
       );
-      
+  
       if (!codeObj) {
-        // Handle scenario where code object is not found
         console.error('Code object not found for the current question');
         return;
       }
   
       const code = codeObj.code;
   
-      const transpiledCode = Babel.transform(code, {
-        presets: ['@babel/preset-env'],
+      const transpiledCode = transform(code, {
+        presets: [presetEnv],
       }).code;
   
-      // eslint-disable-next-line no-eval
       const result = eval(transpiledCode);
       this.setState({ codeOutput: result });
     } catch (error) {
