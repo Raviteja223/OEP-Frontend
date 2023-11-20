@@ -998,17 +998,17 @@ class ExamLive extends Component {
                               }}
                             />
                           </div>
+                          <div style={{ padding: '10px', margin: '10px' }}>
                           <button
                             onClick={this.executeCode}
                             style={{
-                              margin: '10px',
-                              padding: '10px',
                               fontSize: '16px',
                               fontWeight: 'bold', // Adding font weight
                             }}
                           >
                             RUN
                           </button>
+                          </div>
                           <div>{this.state.codeOutput}</div>
                           </div>
                         )}
