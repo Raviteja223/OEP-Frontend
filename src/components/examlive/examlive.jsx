@@ -568,7 +568,6 @@ class ExamLive extends Component {
 
   executeCode() {
     let output = '';
-    let result;
   
     // Override console.log to capture its output
     const originalConsoleLog = console.log;
@@ -588,8 +587,8 @@ class ExamLive extends Component {
       }
   
       const code = codeObj.code;
-      // Use eval() to execute the code
-      result = eval(code);
+      // eslint-disable-next-line no-eval
+      eval(code);
     } catch (error) {
       // Handle any errors that occur during execution
       console.error('Error executing code:', error);
@@ -598,11 +597,7 @@ class ExamLive extends Component {
       // Restore the original console.log
       console.log = originalConsoleLog;
     }
-  
-    console.log(output, "output code");
-    console.log(result, "result code");
     this.setState({ codeOutput: output });
-    return { output, result };
   }
   
   
@@ -1001,13 +996,8 @@ class ExamLive extends Component {
                                 );
                               }}
                             />
-                            <div style={{ display: "flex", flexDirection: "row" }}>
-                              <button onClick={this.executeCode}>Run</button>
-                              <p>Output</p>
-                            </div>
-                            <div>
-                              {this.state.codeOutput}
-                            </div>
+                            <button onClick={this.executeCode}>RUN</button>
+                            <div>{this.state.codeOutput}</div>
                           </div>
                         )}
                       </div>
