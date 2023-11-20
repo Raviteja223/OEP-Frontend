@@ -981,6 +981,7 @@ class ExamLive extends Component {
                             })}
                           </div>
                         ) : (
+                          <div>
                           <div className={stylesCSS.quesitonResponseCard_option}>
                             <Editor
                               height="50vh"
@@ -996,8 +997,9 @@ class ExamLive extends Component {
                                 );
                               }}
                             />
-                            <button onClick={this.executeCode}>RUN</button>
-                            <div>{this.state.codeOutput}</div>
+                          </div>
+                          <button onClick={this.executeCode}>RUN</button>
+                          <div>{this.state.codeOutput}</div>
                           </div>
                         )}
                       </div>
