@@ -146,7 +146,7 @@ class ExamLive extends Component {
 
       if (tabSwitchCount >= 3) {
         // It's the second tab switch, submit the exam.
-        // await this.submitResponsesWithoutConfirm();
+        await this.submitResponsesWithoutConfirm();
       }
     }
   }
